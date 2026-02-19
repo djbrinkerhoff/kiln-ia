@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiln Information Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    /* Entity colors */
+    --site: #3B82F6;
+    --site-bg: #EFF6FF;
+    --site-border: #BFDBFE;
+    --site-text: #1E40AF;
+
+    --page: #22C55E;
+    --page-bg: #F0FDF4;
+    --page-border: #BBF7D0;
+    --page-text: #166534;
+
+    --block: #A855F7;
+    --block-bg: #FAF5FF;
+    --block-border: #E9D5FF;
+    --block-text: #6B21A8;
+
+    --content: #F59E0B;
+    --content-bg: #FFFBEB;
+    --content-border: #FDE68A;
+    --content-text: #92400E;
+
+    --settings: #EF4444;
+    --settings-bg: #FEF2F2;
+    --settings-border: #FECACA;
+    --settings-text: #991B1B;
+
+    --design: #3B82F6;
+    --design-bg: #EFF6FF;
+    --design-border: #BFDBFE;
+    --design-text: #1E40AF;
+
+    /* Surfaces */
+    --bg: #F5F2ED;
+    --surface: #FFFFFF;
+    --surface-raised: #FAFAF8;
+    --border: #E5E2DC;
+    --border-light: #EDEBE6;
+    --text: #1A1A1A;
+    --text-secondary: #6B6B6B;
+    --text-tertiary: #9B9B9B;
+
+    --mono: 'DM Mono', monospace;
+    --serif: 'Fraunces', serif;
+
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-xs: 4px;
+  }
+
+  body {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(245, 242, 237, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .header h1 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .header h1 span {
+    color: var(--text-tertiary);
+    font-weight: 300;
+  }
+
+  /* ── Segmented Control ── */
+  .segmented {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 3px;
+    position: relative;
+    gap: 2px;
+  }
+
+  .segmented-bg {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    height: calc(100% - 6px);
+    background: var(--text);
+    border-radius: 7px;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+  }
+
+  .seg-btn {
+    position: relative;
+    z-index: 1;
+    padding: 8px 18px;
+    border: none;
+    background: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 7px;
+    transition: color 0.25s ease;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+
+  .seg-btn.active { color: var(--surface); font-weight: 500; }
+  .seg-btn:not(.active):hover { color: var(--text); }
+
+  /* ── Views Container ── */
+  .views-wrapper {
+    position: relative;
+    padding: 40px 32px 60px;
+    overflow: hidden;
+  }
+
+  .view {
+    position: absolute;
+    top: 40px;
+    left: 32px;
+    right: 32px;
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .view.active {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  .view-subtitle {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: -18px;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  /* ═══════════════════════════════════
+     VIEW 1: NESTED CONTAINMENT
+  ═══════════════════════════════════ */
+  .nest-site {
+    background: var(--site-bg);
+    border: 2px solid var(--site-border);
+    border-radius: 14px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nest-site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--site-border);
+    background: rgba(59, 130, 246, 0.05);
+  }
+
+  .nest-label {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nest-label .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .badge-settings {
+    background: var(--settings-bg);
+    border: 1px solid var(--settings-border);
+    color: var(--settings-text);
+  }
+
+  .badge-design {
+    background: var(--design-bg);
+    border: 1px solid var(--design-border);
+    color: var(--design-text);
+  }
+
+  .badges-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .nest-site-body {
+    padding: 20px;
+  }
+
+  .nest-pages-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .nest-page {
+    background: var(--page-bg);
+    border: 2px solid var(--page-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .nest-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--page-border);
+    background: rgba(34, 197, 94, 0.04);
+  }
+
+  .nest-page-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nest-block {
+    background: var(--block-bg);
+    border: 1.5px solid var(--block-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .nest-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--block-border);
+    background: rgba(168, 85, 247, 0.03);
+  }
+
+  .nest-block-body {
+    padding: 10px;
+  }
+
+  .nest-content {
+    background: var(--content-bg);
+    border: 1.5px solid var(--content-border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nest-label-sm {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nest-label-xs {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .badge-sm {
+    padding: 2px 7px;
+    font-size: 9px;
+    border-radius: 12px;
+  }
+
+  .nest-block-meta {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .meta-tag {
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 500;
+    font-family: var(--mono);
+    letter-spacing: 0.02em;
+  }
+
+  .meta-variant {
+    background: rgba(168, 85, 247, 0.08);
+    color: var(--block-text);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+  }
+
+  .meta-override {
+    background: rgba(59, 130, 246, 0.08);
+    color: var(--design-text);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+  }
+
+  .content-placeholder {
+    width: 100%;
+    height: 6px;
+    background: var(--content-border);
+    border-radius: 3px;
+    opacity: 0.5;
+  }
+
+  .content-placeholder.short { width: 60%; }
+
+  .content-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--content-text);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════
+     VIEW 2: TREE WITH CARDINALITY
+  ═══════════════════════════════════ */
+  .tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 20px 0;
+  }
+
+  .tree-node {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+
+  .tree-card {
+    background: var(--surface);
+    border: 2px solid;
+    border-radius: var(--radius);
+    padding: 14px 24px;
+    text-align: center;
+    min-width: 160px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .tree-card-label {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tree-card .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tree-edge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 60px;
+    position: relative;
+  }
+
+  .tree-edge-line {
+    width: 2px;
+    flex: 1;
+    background: var(--border);
+  }
+
+  .tree-edge-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg);
+    padding: 2px 10px;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .tree-edge-arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--border);
+  }
+
+  /* Side annotations */
+  .tree-side-annotations {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+  }
+
+  .tree-side-left .tree-side-annotations {
+    align-items: flex-end;
+    margin-right: 20px;
+  }
+
+  .tree-side-right .tree-side-annotations {
+    align-items: flex-start;
+    margin-left: 20px;
+  }
+
+  .tree-side-left, .tree-side-right {
+    display: flex;
+    align-items: center;
+    min-width: 140px;
+  }
+
+  .tree-annotation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1.5px dashed;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--surface);
+    white-space: nowrap;
+  }
+
+  .tree-annotation .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tree-dash-line {
+    width: 20px;
+    height: 0;
+    border-top: 1.5px dashed var(--border);
+    flex-shrink: 0;
+  }
+
+  .tree-side-left .tree-dash-line { order: 1; }
+  .tree-side-left .tree-side-annotations { order: 0; }
+
+  /* ── Color utilities ── */
+  .c-site { color: var(--site-text); }
+  .c-page { color: var(--page-text); }
+  .c-block { color: var(--block-text); }
+  .c-content { color: var(--content-text); }
+  .c-settings { color: var(--settings-text); }
+  .c-design { color: var(--design-text); }
+
+  .bg-site { background: var(--site); }
+  .bg-page { background: var(--page); }
+  .bg-block { background: var(--block); }
+  .bg-content { background: var(--content); }
+  .bg-settings { background: var(--settings); }
+  .bg-design { background: var(--design); }
+
+  .b-site { border-color: var(--site-border); }
+  .b-page { border-color: var(--page-border); }
+  .b-block { border-color: var(--block-border); }
+  .b-content { border-color: var(--content-border); }
+  .b-settings { border-color: var(--settings-border); }
+  .b-design { border-color: var(--design-border); }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px 20px; }
+    .views-wrapper { padding: 24px 16px 40px; }
+    .nest-pages-row { grid-template-columns: 1fr; }
+    .tree-side-left, .tree-side-right { min-width: 100px; }
+    .tree-side-left .tree-side-annotations, .tree-side-right .tree-side-annotations { gap: 4px; }
+    .tree-annotation { padding: 4px 10px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Kiln <span>/ Information Architecture</span></h1>
+  <div class="segmented" id="segmented">
+    <div class="segmented-bg" id="segBg"></div>
+    <button class="seg-btn active" data-view="nested">Nested</button>
+    <button class="seg-btn" data-view="tree">Hierarchy</button>
+  </div>
+</div>
+
+<div class="views-wrapper" id="viewsWrapper">
+
+  <!-- ═══════ VIEW 1: NESTED CONTAINMENT ═══════ -->
+  <div class="view active" id="view-nested">
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot bg-site"></div>Site</div>
+      <div class="legend-item"><div class="legend-dot bg-page"></div>Page</div>
+      <div class="legend-item"><div class="legend-dot bg-block"></div>Block</div>
+      <div class="legend-item"><div class="legend-dot bg-content"></div>Content</div>
+      <div class="legend-item"><div class="legend-dot bg-settings"></div>Settings</div>
+      <div class="legend-item"><div class="legend-dot bg-design"></div>Design</div>
+    </div>
+    <div class="view-subtitle">Each level nests inside its parent. Site contains Pages, Pages contain Blocks, Blocks contain Content. Settings and Design attach as badges to their owner.</div>
+
+    <div class="nest-site">
+      <div class="nest-site-header">
+        <div class="nest-label c-site"><div class="dot bg-site"></div> Site</div>
+        <div class="badges-group">
+          <div class="badge badge-settings">Settings</div>
+          <div class="badge badge-design">Design</div>
+        </div>
+      </div>
+      <div class="nest-site-body">
+        <div class="nest-pages-row">
+
+          <!-- Page 1: Home -->
+          <div class="nest-page">
+            <div class="nest-page-header">
+              <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> Home</div>
+              <div class="badge badge-settings badge-sm">Settings</div>
+            </div>
+            <div class="nest-page-body">
+              <div class="nest-block">
+                <div class="nest-block-header">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Hero</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block-body">
+                  <div class="nest-content">
+                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <div class="content-label">heading, subheading, image</div>
+                      <div class="content-placeholder"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="nest-block">
+                <div class="nest-block-header">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block-body">
+                  <div class="nest-content">
+                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <div class="content-label">body, links</div>
+                      <div class="content-placeholder short"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Page 2: About -->
+          <div class="nest-page">
+            <div class="nest-page-header">
+              <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> About</div>
+              <div class="badge badge-settings badge-sm">Settings</div>
+            </div>
+            <div class="nest-page-body">
+              <div class="nest-block">
+                <div class="nest-block-header">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Gallery</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block-body">
+                  <div class="nest-content">
+                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <div class="content-label">images, captions, alt_text</div>
+                      <div class="content-placeholder"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="nest-block">
+                <div class="nest-block-header">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block-body">
+                  <div class="nest-content">
+                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <div class="content-label">body, links</div>
+                      <div class="content-placeholder short"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="nest-block">
+                <div class="nest-block-header">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> CTA</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block-body">
+                  <div class="nest-content">
+                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <div class="content-label">label, url, style</div>
+                      <div class="content-placeholder short"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Page 3: Contact -->
+          <div class="nest-page">
+            <div class="nest-page-header">
+              <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> Contact</div>
+              <div class="badge badge-settings badge-sm">Settings</div>
+            </div>
+            <div class="nest-page-body">
+              <div class="nest-block">
+                <div class="nest-block-header">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Form</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block-body">
+                  <div class="nest-content">
+                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                      <div class="content-label">fields, action, method</div>
+                      <div class="content-placeholder"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ VIEW 2: TREE WITH CARDINALITY ═══════ -->
+  <div class="view" id="view-tree">
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot bg-site"></div>Site</div>
+      <div class="legend-item"><div class="legend-dot bg-page"></div>Page</div>
+      <div class="legend-item"><div class="legend-dot bg-block"></div>Block</div>
+      <div class="legend-item"><div class="legend-dot bg-content"></div>Content</div>
+      <div class="legend-item" style="gap:4px;"><span style="display:inline-block;width:14px;border-top:1.5px dashed var(--settings);"></span>Settings</div>
+      <div class="legend-item" style="gap:4px;"><span style="display:inline-block;width:14px;border-top:1.5px dashed var(--design);"></span>Design</div>
+    </div>
+    <div class="view-subtitle">Single-instance hierarchy showing each entity once. Solid lines show containment with cardinality. Dashed lines show attached configuration.</div>
+
+    <div class="tree-container">
+      <!-- Site Node -->
+      <div class="tree-node">
+        <div class="tree-side-left">
+          <div class="tree-side-annotations">
+            <div class="tree-annotation b-settings c-settings">
+              <div class="dot bg-settings"></div>
+              Settings
+            </div>
+          </div>
+          <div class="tree-dash-line" style="border-color: var(--settings);"></div>
+        </div>
+        <div class="tree-card b-site" style="border-color: var(--site);">
+          <div class="tree-card-label c-site"><div class="dot bg-site"></div> Site</div>
+        </div>
+        <div class="tree-side-right">
+          <div class="tree-dash-line" style="border-color: var(--design);"></div>
+          <div class="tree-side-annotations">
+            <div class="tree-annotation b-design c-design">
+              <div class="dot bg-design"></div>
+              Design
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edge: Site → Page -->
+      <div class="tree-edge">
+        <div class="tree-edge-line"></div>
+        <div class="tree-edge-label">has many</div>
+        <div class="tree-edge-arrow"></div>
+      </div>
+
+      <!-- Page Node -->
+      <div class="tree-node">
+        <div class="tree-side-left">
+          <div class="tree-side-annotations">
+            <div class="tree-annotation b-settings c-settings">
+              <div class="dot bg-settings"></div>
+              Settings
+            </div>
+          </div>
+          <div class="tree-dash-line" style="border-color: var(--settings);"></div>
+        </div>
+        <div class="tree-card" style="border-color: var(--page);">
+          <div class="tree-card-label c-page"><div class="dot bg-page"></div> Page</div>
+        </div>
+        <div class="tree-side-right" style="visibility:hidden;">
+          <div class="tree-dash-line"></div>
+          <div class="tree-side-annotations"><div class="tree-annotation" style="visibility:hidden;">_</div></div>
+        </div>
+      </div>
+
+      <!-- Edge: Page → Block -->
+      <div class="tree-edge">
+        <div class="tree-edge-line"></div>
+        <div class="tree-edge-label">has many</div>
+        <div class="tree-edge-arrow"></div>
+      </div>
+
+      <!-- Block Node -->
+      <div class="tree-node">
+        <div class="tree-side-left">
+          <div class="tree-side-annotations">
+            <div class="tree-annotation b-block c-block" style="border-color: var(--block-border);">
+              <div class="dot bg-block"></div>
+              Variants
+            </div>
+          </div>
+          <div class="tree-dash-line" style="border-color: var(--block-border);"></div>
+        </div>
+        <div class="tree-card" style="border-color: var(--block);">
+          <div class="tree-card-label c-block"><div class="dot bg-block"></div> Block</div>
+        </div>
+        <div class="tree-side-right">
+          <div class="tree-dash-line" style="border-color: var(--design-border);"></div>
+          <div class="tree-side-annotations">
+            <div class="tree-annotation b-design c-design">
+              <div class="dot bg-design"></div>
+              Design Overrides
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edge: Block → Content -->
+      <div class="tree-edge">
+        <div class="tree-edge-line"></div>
+        <div class="tree-edge-label">has one</div>
+        <div class="tree-edge-arrow"></div>
+      </div>
+
+      <!-- Content Node -->
+      <div class="tree-node">
+        <div class="tree-side-left" style="visibility:hidden;">
+          <div class="tree-side-annotations"><div class="tree-annotation" style="visibility:hidden;">_</div></div>
+          <div class="tree-dash-line"></div>
+        </div>
+        <div class="tree-card" style="border-color: var(--content);">
+          <div class="tree-card-label c-content"><div class="dot bg-content"></div> Content</div>
+        </div>
+        <div class="tree-side-right" style="visibility:hidden;">
+          <div class="tree-dash-line"></div>
+          <div class="tree-side-annotations"><div class="tree-annotation" style="visibility:hidden;">_</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  const segmented = document.getElementById('segmented');
+  const segBg = document.getElementById('segBg');
+  const buttons = segmented.querySelectorAll('.seg-btn');
+  const wrapper = document.getElementById('viewsWrapper');
+
+  function positionBg(btn) {
+    segBg.style.width = btn.offsetWidth + 'px';
+    segBg.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
+  }
+
+  function switchView(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById('view-' + viewId);
+    // Force reflow for transition
+    requestAnimationFrame(() => {
+      target.classList.add('active');
+    });
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      positionBg(btn);
+      switchView(btn.dataset.view);
+    });
+  });
+
+  // Initial position
+  const activeBtn = segmented.querySelector('.seg-btn.active');
+  positionBg(activeBtn);
+
+  // Reposition on resize
+  window.addEventListener('resize', () => {
+    const active = segmented.querySelector('.seg-btn.active');
+    positionBg(active);
+  });
+})();
+</script>
+
+</body>
+</html>
