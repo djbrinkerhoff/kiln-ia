@@ -42,6 +42,16 @@
     --design-border: #99F6E4;
     --design-text: #115E59;
 
+    --nav: #EC4899;
+    --nav-bg: #FDF2F8;
+    --nav-border: #FBCFE8;
+    --nav-text: #9D174D;
+
+    --footer: #6366F1;
+    --footer-bg: #EEF2FF;
+    --footer-border: #C7D2FE;
+    --footer-text: #3730A3;
+
     /* Surfaces */
     --bg: #F5F2ED;
     --surface: #FFFFFF;
@@ -609,6 +619,80 @@
   .b-settings { border-color: var(--settings-border); }
   .b-design { border-color: var(--design-border); }
 
+  .c-nav { color: var(--nav-text); }
+  .bg-nav { background: var(--nav); }
+  .b-nav { border-color: var(--nav-border); }
+
+  .c-footer { color: var(--footer-text); }
+  .bg-footer { background: var(--footer); }
+  .b-footer { border-color: var(--footer-border); }
+
+  /* ── Navigation card ── */
+  .nest-nav {
+    background: var(--nav-bg);
+    border: 1.5px solid var(--nav-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.2s ease;
+  }
+
+  .nest-nav:hover {
+    border-color: var(--nav);
+  }
+
+  .nest-nav-items {
+    display: flex;
+    gap: 12px;
+  }
+
+  .nest-nav-item {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--nav-text);
+    padding: 2px 8px;
+    background: rgba(236, 72, 153, 0.08);
+    border: 1px solid rgba(236, 72, 153, 0.15);
+    border-radius: 4px;
+  }
+
+  /* ── Footer card ── */
+  .nest-footer {
+    background: var(--footer-bg);
+    border: 1.5px solid var(--footer-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.2s ease;
+  }
+
+  .nest-footer:hover {
+    border-color: var(--footer);
+  }
+
+  .nest-footer-items {
+    display: flex;
+    gap: 12px;
+  }
+
+  .nest-footer-item {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--footer-text);
+    padding: 2px 8px;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 4px;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 900px) {
     .header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px 20px; }
@@ -640,10 +724,12 @@
       <div class="legend-item"><div class="legend-dot bg-page"></div>Page</div>
       <div class="legend-item"><div class="legend-dot bg-block"></div>Block</div>
       <div class="legend-item"><div class="legend-dot bg-content"></div>Content</div>
+      <div class="legend-item"><div class="legend-dot bg-nav"></div>Navigation</div>
+      <div class="legend-item"><div class="legend-dot bg-footer"></div>Footer</div>
       <div class="legend-item"><div class="legend-dot bg-settings"></div>Settings</div>
       <div class="legend-item"><div class="legend-dot bg-design"></div>Design</div>
     </div>
-    <div class="view-subtitle">Each level nests inside its parent. Site contains Pages, Pages contain Blocks, Blocks contain Content. Settings and Design attach as badges to their owner.</div>
+    <div class="view-subtitle">Each level nests inside its parent. Site contains Pages, Pages contain Blocks, Blocks contain Content. Navigation and Footer span the full site. Settings and Design attach as badges to their owner.</div>
 
     <div class="nest-site">
       <div class="nest-site-header">
@@ -654,6 +740,14 @@
         </div>
       </div>
       <div class="nest-site-body">
+        <div class="nest-nav">
+          <div class="nest-label-sm c-nav"><div class="dot bg-nav" style="width:7px;height:7px;"></div> Navigation</div>
+          <div class="nest-nav-items">
+            <div class="nest-nav-item">Home</div>
+            <div class="nest-nav-item">About</div>
+            <div class="nest-nav-item">Contact</div>
+          </div>
+        </div>
         <div class="nest-pages-row">
 
           <!-- Page 1: Home -->
@@ -795,6 +889,14 @@
           </div>
 
         </div>
+        <div class="nest-footer">
+          <div class="nest-label-sm c-footer"><div class="dot bg-footer" style="width:7px;height:7px;"></div> Footer</div>
+          <div class="nest-footer-items">
+            <div class="nest-footer-item">links</div>
+            <div class="nest-footer-item">copyright</div>
+            <div class="nest-footer-item">social</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -806,6 +908,8 @@
       <div class="legend-item"><div class="legend-dot bg-page"></div>Page</div>
       <div class="legend-item"><div class="legend-dot bg-block"></div>Block</div>
       <div class="legend-item"><div class="legend-dot bg-content"></div>Content</div>
+      <div class="legend-item"><div class="legend-dot bg-nav"></div>Navigation</div>
+      <div class="legend-item"><div class="legend-dot bg-footer"></div>Footer</div>
       <div class="legend-item" style="gap:4px;"><span style="display:inline-block;width:14px;border-top:1.5px dashed var(--settings);"></span>Settings</div>
       <div class="legend-item" style="gap:4px;"><span style="display:inline-block;width:14px;border-top:1.5px dashed var(--design);"></span>Design</div>
     </div>
@@ -832,6 +936,14 @@
             <div class="tree-annotation b-design c-design">
               <div class="dot bg-design"></div>
               Design
+            </div>
+            <div class="tree-annotation b-nav c-nav">
+              <div class="dot bg-nav"></div>
+              Navigation
+            </div>
+            <div class="tree-annotation b-footer c-footer">
+              <div class="dot bg-footer"></div>
+              Footer
             </div>
           </div>
         </div>
