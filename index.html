@@ -705,6 +705,81 @@
     border-radius: 4px;
   }
 
+  /* ── Option toggle ── */
+  .option-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .option-toggle-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .option-toggle-btns {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .opt-btn {
+    padding: 5px 14px;
+    border: none;
+    background: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .opt-btn.active {
+    background: var(--text);
+    color: var(--surface);
+    font-weight: 500;
+  }
+
+  .opt-btn:not(.active):hover {
+    color: var(--text);
+  }
+
+  .nested-option {
+    display: none;
+  }
+
+  .nested-option.active {
+    display: block;
+  }
+
+  /* ── Nav/Footer inside page ── */
+  .nest-block-inline-nav,
+  .nest-block-inline-footer {
+    background: var(--block-bg);
+    border: 1.5px solid var(--block-border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.2s ease;
+  }
+
+  .nest-block-inline-nav:hover,
+  .nest-block-inline-footer:hover {
+    border-color: var(--block);
+  }
+
   /* ── Responsive ── */
   @media (max-width: 900px) {
     .header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px 20px; }
@@ -744,180 +819,402 @@
     </div>
     <div class="view-subtitle">Each level nests inside its parent. Site contains Pages, Pages contain Blocks, Blocks contain Content. Settings and Design attach as badges to their owner.</div>
 
-    <div class="nest-site">
-      <div class="nest-site-header">
-        <div class="nest-label c-site"><div class="dot bg-site"></div> Site</div>
-        <div class="badges-group">
-          <div class="badge badge-settings">Settings</div>
-          <div class="badge badge-design">Design</div>
-        </div>
+    <div class="option-toggle">
+      <div class="option-toggle-label">Nav &amp; Footer</div>
+      <div class="option-toggle-btns" id="optionToggle">
+        <button class="opt-btn active" data-option="a">Site-level</button>
+        <button class="opt-btn" data-option="b">Per-page</button>
       </div>
-      <div class="nest-site-body">
-        <div class="nest-nav">
-          <div class="nest-label-sm c-block"><div class="dot bg-block" style="width:7px;height:7px;"></div> Navigation</div>
-          <div class="nest-block-meta">
-            <div class="meta-tag meta-settings">Settings</div>
-            <div class="meta-tag meta-variant">Variants</div>
-            <div class="meta-tag meta-override">Design Overrides</div>
+    </div>
+
+    <!-- ── Option A: Nav/Footer at site level ── -->
+    <div class="nested-option active" id="nested-option-a">
+      <div class="nest-site">
+        <div class="nest-site-header">
+          <div class="nest-label c-site"><div class="dot bg-site"></div> Site</div>
+          <div class="badges-group">
+            <div class="badge badge-settings">Settings</div>
+            <div class="badge badge-design">Design</div>
           </div>
         </div>
-        <div class="nest-pages-row">
-
-          <!-- Page 1: Home -->
-          <div class="nest-page">
-            <div class="nest-page-header">
-              <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> Home</div>
-              <div class="badge badge-settings badge-sm">Settings</div>
-            </div>
-            <div class="nest-page-body">
-              <div class="nest-block">
-                <div class="nest-block-header">
-                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Hero</div>
-                  <div class="nest-block-meta">
-                    <div class="meta-tag meta-settings">Settings</div>
-                    <div class="meta-tag meta-variant">Variants</div>
-                    <div class="meta-tag meta-override">Design Overrides</div>
-                  </div>
-                </div>
-                <div class="nest-block-body">
-                  <div class="nest-content">
-                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
-                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-                      <div class="content-label">heading, subheading, image</div>
-                      <div class="content-placeholder"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="nest-block">
-                <div class="nest-block-header">
-                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
-                  <div class="nest-block-meta">
-                    <div class="meta-tag meta-settings">Settings</div>
-                    <div class="meta-tag meta-variant">Variants</div>
-                    <div class="meta-tag meta-override">Design Overrides</div>
-                  </div>
-                </div>
-                <div class="nest-block-body">
-                  <div class="nest-content">
-                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
-                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-                      <div class="content-label">body, links</div>
-                      <div class="content-placeholder short"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <div class="nest-site-body">
+          <div class="nest-nav">
+            <div class="nest-label-sm c-block"><div class="dot bg-block" style="width:7px;height:7px;"></div> Navigation</div>
+            <div class="nest-block-meta">
+              <div class="meta-tag meta-settings">Settings</div>
+              <div class="meta-tag meta-variant">Variants</div>
+              <div class="meta-tag meta-override">Design Overrides</div>
             </div>
           </div>
+          <div class="nest-pages-row">
 
-          <!-- Page 2: About -->
-          <div class="nest-page">
-            <div class="nest-page-header">
-              <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> About</div>
-              <div class="badge badge-settings badge-sm">Settings</div>
-            </div>
-            <div class="nest-page-body">
-              <div class="nest-block">
-                <div class="nest-block-header">
-                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Gallery</div>
-                  <div class="nest-block-meta">
-                    <div class="meta-tag meta-settings">Settings</div>
-                    <div class="meta-tag meta-variant">Variants</div>
-                    <div class="meta-tag meta-override">Design Overrides</div>
+            <!-- Page 1: Home -->
+            <div class="nest-page">
+              <div class="nest-page-header">
+                <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> Home</div>
+                <div class="badge badge-settings badge-sm">Settings</div>
+              </div>
+              <div class="nest-page-body">
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Hero</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
                   </div>
-                </div>
-                <div class="nest-block-body">
-                  <div class="nest-content">
-                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
-                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-                      <div class="content-label">images, captions, alt_text</div>
-                      <div class="content-placeholder"></div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">heading, subheading, image</div>
+                        <div class="content-placeholder"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="nest-block">
-                <div class="nest-block-header">
-                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
-                  <div class="nest-block-meta">
-                    <div class="meta-tag meta-settings">Settings</div>
-                    <div class="meta-tag meta-variant">Variants</div>
-                    <div class="meta-tag meta-override">Design Overrides</div>
-                  </div>
-                </div>
-                <div class="nest-block-body">
-                  <div class="nest-content">
-                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
-                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-                      <div class="content-label">body, links</div>
-                      <div class="content-placeholder short"></div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="nest-block">
-                <div class="nest-block-header">
-                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> CTA</div>
-                  <div class="nest-block-meta">
-                    <div class="meta-tag meta-settings">Settings</div>
-                    <div class="meta-tag meta-variant">Variants</div>
-                    <div class="meta-tag meta-override">Design Overrides</div>
-                  </div>
-                </div>
-                <div class="nest-block-body">
-                  <div class="nest-content">
-                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
-                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-                      <div class="content-label">label, url, style</div>
-                      <div class="content-placeholder short"></div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">body, links</div>
+                        <div class="content-placeholder short"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <!-- Page 2: About -->
+            <div class="nest-page">
+              <div class="nest-page-header">
+                <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> About</div>
+                <div class="badge badge-settings badge-sm">Settings</div>
+              </div>
+              <div class="nest-page-body">
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Gallery</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">images, captions, alt_text</div>
+                        <div class="content-placeholder"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">body, links</div>
+                        <div class="content-placeholder short"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> CTA</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">label, url, style</div>
+                        <div class="content-placeholder short"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page 3: Contact -->
+            <div class="nest-page">
+              <div class="nest-page-header">
+                <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> Contact</div>
+                <div class="badge badge-settings badge-sm">Settings</div>
+              </div>
+              <div class="nest-page-body">
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Form</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">fields, action, method</div>
+                        <div class="content-placeholder"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
-
-          <!-- Page 3: Contact -->
-          <div class="nest-page">
-            <div class="nest-page-header">
-              <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> Contact</div>
-              <div class="badge badge-settings badge-sm">Settings</div>
+          <div class="nest-footer">
+            <div class="nest-label-sm c-block"><div class="dot bg-block" style="width:7px;height:7px;"></div> Footer</div>
+            <div class="nest-block-meta">
+              <div class="meta-tag meta-settings">Settings</div>
+              <div class="meta-tag meta-variant">Variants</div>
+              <div class="meta-tag meta-override">Design Overrides</div>
             </div>
-            <div class="nest-page-body">
-              <div class="nest-block">
-                <div class="nest-block-header">
-                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Form</div>
-                  <div class="nest-block-meta">
-                    <div class="meta-tag meta-settings">Settings</div>
-                    <div class="meta-tag meta-variant">Variants</div>
-                    <div class="meta-tag meta-override">Design Overrides</div>
-                  </div>
-                </div>
-                <div class="nest-block-body">
-                  <div class="nest-content">
-                    <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
-                    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-                      <div class="content-label">fields, action, method</div>
-                      <div class="content-placeholder"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div class="nest-footer">
-          <div class="nest-label-sm c-block"><div class="dot bg-block" style="width:7px;height:7px;"></div> Footer</div>
-          <div class="nest-block-meta">
-            <div class="meta-tag meta-settings">Settings</div>
-            <div class="meta-tag meta-variant">Variants</div>
-            <div class="meta-tag meta-override">Design Overrides</div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- ── Option B: Nav/Footer inside each page ── -->
+    <div class="nested-option" id="nested-option-b">
+      <div class="nest-site">
+        <div class="nest-site-header">
+          <div class="nest-label c-site"><div class="dot bg-site"></div> Site</div>
+          <div class="badges-group">
+            <div class="badge badge-settings">Settings</div>
+            <div class="badge badge-design">Design</div>
+          </div>
+        </div>
+        <div class="nest-site-body">
+          <div class="nest-pages-row">
+
+            <!-- Page 1: Home -->
+            <div class="nest-page">
+              <div class="nest-page-header">
+                <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> Home</div>
+                <div class="badge badge-settings badge-sm">Settings</div>
+              </div>
+              <div class="nest-page-body">
+                <div class="nest-block-inline-nav">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Navigation</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Hero</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">heading, subheading, image</div>
+                        <div class="content-placeholder"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">body, links</div>
+                        <div class="content-placeholder short"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nest-block-inline-footer">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Footer</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page 2: About -->
+            <div class="nest-page">
+              <div class="nest-page-header">
+                <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> About</div>
+                <div class="badge badge-settings badge-sm">Settings</div>
+              </div>
+              <div class="nest-page-body">
+                <div class="nest-block-inline-nav">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Navigation</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Gallery</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">images, captions, alt_text</div>
+                        <div class="content-placeholder"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">body, links</div>
+                        <div class="content-placeholder short"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> CTA</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">label, url, style</div>
+                        <div class="content-placeholder short"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nest-block-inline-footer">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Footer</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page 3: Contact -->
+            <div class="nest-page">
+              <div class="nest-page-header">
+                <div class="nest-label-sm c-page"><div class="dot bg-page" style="width:7px;height:7px;"></div> Contact</div>
+                <div class="badge badge-settings badge-sm">Settings</div>
+              </div>
+              <div class="nest-page-body">
+                <div class="nest-block-inline-nav">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Navigation</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+                <div class="nest-block">
+                  <div class="nest-block-header">
+                    <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Form</div>
+                    <div class="nest-block-meta">
+                      <div class="meta-tag meta-settings">Settings</div>
+                      <div class="meta-tag meta-variant">Variants</div>
+                      <div class="meta-tag meta-override">Design Overrides</div>
+                    </div>
+                  </div>
+                  <div class="nest-block-body">
+                    <div class="nest-content">
+                      <div class="dot bg-content" style="width:6px;height:6px;flex-shrink:0;border-radius:50%;"></div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                        <div class="content-label">fields, action, method</div>
+                        <div class="content-placeholder"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nest-block-inline-footer">
+                  <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Footer</div>
+                  <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
+                    <div class="meta-tag meta-variant">Variants</div>
+                    <div class="meta-tag meta-override">Design Overrides</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ═══════ VIEW 2: TREE WITH CARDINALITY ═══════ -->
@@ -1093,6 +1390,19 @@
   window.addEventListener('resize', () => {
     const active = segmented.querySelector('.seg-btn.active');
     positionBg(active);
+  });
+
+  // Option A/B toggle
+  const optionToggle = document.getElementById('optionToggle');
+  const optBtns = optionToggle.querySelectorAll('.opt-btn');
+
+  optBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      optBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.nested-option').forEach(o => o.classList.remove('active'));
+      document.getElementById('nested-option-' + btn.dataset.option).classList.add('active');
+    });
   });
 })();
 </script>
