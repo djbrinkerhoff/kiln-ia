@@ -151,6 +151,12 @@
   .seg-btn.active { color: var(--surface); font-weight: 500; }
   .seg-btn:not(.active):hover { color: var(--text); }
 
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
   /* ── Views Container ── */
   .views-wrapper {
     position: relative;
@@ -389,6 +395,12 @@
     background: rgba(13, 148, 136, 0.08);
     color: var(--design-text);
     border: 1px solid rgba(13, 148, 136, 0.15);
+  }
+
+  .meta-settings {
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--settings-text);
+    border: 1px solid rgba(239, 68, 68, 0.15);
   }
 
   /* ── Hover states ── */
@@ -696,6 +708,7 @@
   /* ── Responsive ── */
   @media (max-width: 900px) {
     .header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px 20px; }
+    .header-right { flex-wrap: wrap; }
     .views-wrapper { padding: 24px 16px 40px; }
     .nest-pages-row { grid-template-columns: 1fr; }
     .tree-side-left, .tree-side-right { min-width: 100px; }
@@ -708,10 +721,12 @@
 
 <div class="header">
   <h1>Kiln <span>/ Information Architecture</span></h1>
-  <div class="segmented" id="segmented">
-    <div class="segmented-bg" id="segBg"></div>
-    <button class="seg-btn active" data-view="nested">Nested</button>
-    <button class="seg-btn" data-view="tree">Hierarchy</button>
+  <div class="header-right">
+<div class="segmented" id="segmented">
+      <div class="segmented-bg" id="segBg"></div>
+      <button class="seg-btn active" data-view="nested">Nested</button>
+      <button class="seg-btn" data-view="tree">Hierarchy</button>
+    </div>
   </div>
 </div>
 
@@ -741,6 +756,7 @@
         <div class="nest-nav">
           <div class="nest-label-sm c-block"><div class="dot bg-block" style="width:7px;height:7px;"></div> Navigation</div>
           <div class="nest-block-meta">
+            <div class="meta-tag meta-settings">Settings</div>
             <div class="meta-tag meta-variant">Variants</div>
             <div class="meta-tag meta-override">Design Overrides</div>
           </div>
@@ -758,6 +774,7 @@
                 <div class="nest-block-header">
                   <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Hero</div>
                   <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
                     <div class="meta-tag meta-variant">Variants</div>
                     <div class="meta-tag meta-override">Design Overrides</div>
                   </div>
@@ -776,6 +793,7 @@
                 <div class="nest-block-header">
                   <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
                   <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
                     <div class="meta-tag meta-variant">Variants</div>
                     <div class="meta-tag meta-override">Design Overrides</div>
                   </div>
@@ -804,6 +822,7 @@
                 <div class="nest-block-header">
                   <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Gallery</div>
                   <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
                     <div class="meta-tag meta-variant">Variants</div>
                     <div class="meta-tag meta-override">Design Overrides</div>
                   </div>
@@ -822,6 +841,7 @@
                 <div class="nest-block-header">
                   <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Text</div>
                   <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
                     <div class="meta-tag meta-variant">Variants</div>
                     <div class="meta-tag meta-override">Design Overrides</div>
                   </div>
@@ -840,6 +860,7 @@
                 <div class="nest-block-header">
                   <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> CTA</div>
                   <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
                     <div class="meta-tag meta-variant">Variants</div>
                     <div class="meta-tag meta-override">Design Overrides</div>
                   </div>
@@ -868,6 +889,7 @@
                 <div class="nest-block-header">
                   <div class="nest-label-xs c-block"><div class="dot bg-block" style="width:6px;height:6px;"></div> Form</div>
                   <div class="nest-block-meta">
+                    <div class="meta-tag meta-settings">Settings</div>
                     <div class="meta-tag meta-variant">Variants</div>
                     <div class="meta-tag meta-override">Design Overrides</div>
                   </div>
@@ -889,6 +911,7 @@
         <div class="nest-footer">
           <div class="nest-label-sm c-block"><div class="dot bg-block" style="width:7px;height:7px;"></div> Footer</div>
           <div class="nest-block-meta">
+            <div class="meta-tag meta-settings">Settings</div>
             <div class="meta-tag meta-variant">Variants</div>
             <div class="meta-tag meta-override">Design Overrides</div>
           </div>
@@ -981,12 +1004,16 @@
       <div class="tree-node">
         <div class="tree-side-left">
           <div class="tree-side-annotations">
+            <div class="tree-annotation b-settings c-settings">
+              <div class="dot bg-settings"></div>
+              Settings
+            </div>
             <div class="tree-annotation b-block c-block" style="border-color: var(--block-border);">
               <div class="dot bg-block"></div>
               Variants
             </div>
           </div>
-          <div class="tree-dash-line" style="border-color: var(--block-border);"></div>
+          <div class="tree-dash-line" style="border-color: var(--settings);"></div>
         </div>
         <div class="tree-card" style="border-color: var(--block);">
           <div class="tree-card-label c-block"><div class="dot bg-block"></div> Block</div>
